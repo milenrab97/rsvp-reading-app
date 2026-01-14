@@ -43,14 +43,16 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div className="progress-container">
-      <div className="progress-info">
-        <span className="progress-text">
-          {current + 1} / {total}
-        </span>
-        <span className="progress-time">
+      <div>     
+       <span className="progress-time">
           {elapsedTime !== undefined && totalTime !== undefined
             ? `${formatTime(elapsedTime)} / ${formatTime(totalTime)}`
             : ''}
+        </span>
+      </div>
+      <div className="progress-info">
+        <span className="progress-text">
+          {current + 1} / {total}
         </span>
         <span className="progress-percentage">
           {percentage.toFixed(1)}%

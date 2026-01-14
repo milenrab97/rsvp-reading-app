@@ -400,7 +400,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
 
               <div className="pdf-actions">
                 <div className="page-range-selector">
-                  <label>From page:</label>
+                <label>From page:</label>
                   <div className="input-with-clear">
                     <input
                       type="number"
@@ -408,6 +408,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
                       max={numPages}
                       value={startPage}
                       onChange={(e) => setStartPage(Math.max(1, Math.min(numPages, parseInt(e.target.value) || 1)))}
+                      onFocus={(e) => e.target.select()}
                       className="page-input"
                       disabled={disabled}
                     />
@@ -430,6 +431,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
                       max={numPages}
                       value={endPage}
                       onChange={(e) => setEndPage(Math.max(1, Math.min(numPages, parseInt(e.target.value) || numPages)))}
+                      onFocus={(e) => e.target.select()}
                       className="page-input"
                       disabled={disabled}
                     />

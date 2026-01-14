@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
+  padding-top: 0;
 }
 
 .progress-info {
@@ -25,9 +26,11 @@
   color: #059669;
   font-weight: 600;
   font-size: 1rem;
-  position: absolute;
+  display: flex;
+  justify-content: center;
+  /* position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
 }
 
 .progress-percentage {
