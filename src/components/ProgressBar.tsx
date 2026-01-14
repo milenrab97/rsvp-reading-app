@@ -5,13 +5,24 @@ interface ProgressBarProps {
   current: number;
   total: number;
   percentage: number;
+  elapsedTime?: number; // in milliseconds
+  totalTime?: number; // in milliseconds
   onSeek?: (index: number) => void;
 }
+
+const formatTime = (ms: number): string => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   current,
   total,
   percentage,
+  elapsedTime,
+  totalTime,
   onSeek,
 }) => {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -30,6 +41,11 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className="progress-info">
         <span className="progress-text">
           {current + 1} / {total}
+        </span>
+        <span className="progress-time">
+          {elapsedTime !== undefined && totalTime !== undefined
+            ? `${formatTime(elapsedTime)} / ${formatTime(totalTime)}`
+            : ''}
         </span>
         <span className="progress-percentage">
           {percentage.toFixed(1)}%

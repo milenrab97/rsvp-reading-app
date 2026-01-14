@@ -8,6 +8,8 @@ interface UseRSVPEngineReturn {
   currentIndex: number;
   totalTokens: number;
   progress: number; // 0-100
+  elapsedTime: number; // in milliseconds
+  totalTime: number; // in milliseconds
   play: () => void;
   pause: () => void;
   reset: () => void;
@@ -41,6 +43,10 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
   const currentToken = tokens[currentIndex] || null;
   const totalTokens = tokens.length;
   const progress = totalTokens > 0 ? (currentIndex / totalTokens) * 100 : 0;
+  
+  // Calculate elapsed and total time
+  const elapsedTime = tokens.slice(0, currentIndex).reduce((sum, token) => sum + token.duration, 0);
+  const totalTime = tokens.reduce((sum, token) => sum + token.duration, 0);
 
   /**
    * Core playback loop using requestAnimationFrame for precision
@@ -223,6 +229,8 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
     currentIndex,
     totalTokens,
     progress,
+    elapsedTime,
+    totalTime,
     play,
     pause,
     reset,

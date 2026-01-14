@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import { useRSVPEngine } from './hooks/useRSVPEngine';
-import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
-import { WordDisplay } from './components/WordDisplay';
-import { PlaybackControls } from './components/PlaybackControls';
-import { SpeedControl } from './components/SpeedControl';
-import { TextInput } from './components/TextInput';
-import { ProgressBar } from './components/ProgressBar';
-import { Settings } from './components/Settings';
-import type { ReadingSettings } from './types';
-import './App.css';
+import { useState } from "react";
+import { useRSVPEngine } from "./hooks/useRSVPEngine";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import { WordDisplay } from "./components/WordDisplay";
+import { PlaybackControls } from "./components/PlaybackControls";
+import { SpeedControl } from "./components/SpeedControl";
+import { TextInput } from "./components/TextInput";
+import { ProgressBar } from "./components/ProgressBar";
+import { Settings } from "./components/Settings";
+import type { ReadingSettings } from "./types";
+import "./App.css";
 
 function App() {
   const rsvpEngine = useRSVPEngine();
-  
+
   const [readingSettings, setReadingSettings] = useState<ReadingSettings>({
-    fontFamily: 'monospace',
+    fontFamily: "monospace",
     fontSize: 40,
-    orpColor: '#3b82f6',
-    backgroundColor: '#ffffff',
-    textColor: '#1f2937',
+    orpColor: "#3b82f6",
+    backgroundColor: "#ffffff",
+    textColor: "#1f2937",
     darkMode: true,
     centerAlignment: true,
     dyslexiaFont: false,
@@ -27,7 +27,7 @@ function App() {
   // Keyboard shortcuts
   useKeyboardShortcuts({
     onPlayPause: () => {
-      if (rsvpEngine.playbackState === 'playing') {
+      if (rsvpEngine.playbackState === "playing") {
         rsvpEngine.pause();
       } else {
         rsvpEngine.play();
@@ -44,12 +44,12 @@ function App() {
   };
 
   const handleReadingSettingsChange = (settings: Partial<ReadingSettings>) => {
-    setReadingSettings(prev => ({ ...prev, ...settings }));
+    setReadingSettings((prev) => ({ ...prev, ...settings }));
   };
 
   const appStyle = {
-    backgroundColor: readingSettings.darkMode ? '#1f2937' : '#ffffff',
-    color: readingSettings.darkMode ? '#f9fafb' : '#1f2937',
+    backgroundColor: readingSettings.darkMode ? "#1f2937" : "#ffffff",
+    color: readingSettings.darkMode ? "#f9fafb" : "#1f2937",
   };
 
   return (
@@ -68,7 +68,7 @@ function App() {
             orpColor={readingSettings.orpColor}
             fontSize={readingSettings.fontSize}
             fontFamily={readingSettings.fontFamily}
-            textColor={readingSettings.darkMode ? '#f9fafb' : '#1f2937'}
+            textColor={readingSettings.darkMode ? "#f9fafb" : "#1f2937"}
             darkMode={readingSettings.darkMode}
           />
 
@@ -86,11 +86,17 @@ function App() {
             current={rsvpEngine.currentIndex}
             total={rsvpEngine.totalTokens}
             percentage={rsvpEngine.progress}
+            elapsedTime={rsvpEngine.elapsedTime}
+            totalTime={rsvpEngine.totalTime}
             onSeek={rsvpEngine.seekToIndex}
           />
         </div>
 
-        <div className={`controls-section ${readingSettings.darkMode ? 'dark-mode' : ''}`}>
+        <div
+          className={`controls-section ${
+            readingSettings.darkMode ? "dark-mode" : ""
+          }`}
+        >
           <SpeedControl
             wpm={rsvpEngine.timingConfig.wpm}
             onWPMChange={rsvpEngine.setWPM}
@@ -99,7 +105,7 @@ function App() {
 
           <TextInput
             onTextSubmit={handleTextSubmit}
-            disabled={rsvpEngine.playbackState === 'playing'}
+            disabled={rsvpEngine.playbackState === "playing"}
             darkMode={readingSettings.darkMode}
           />
 
@@ -114,10 +120,18 @@ function App() {
 
       <footer className="app-footer">
         <div className="keyboard-hints">
-          <span><kbd>Space</kbd> Play/Pause</span>
-          <span><kbd>←</kbd> Back</span>
-          <span><kbd>→</kbd> Forward</span>
-          <span><kbd>Esc</kbd> Reset</span>
+          <span>
+            <kbd>Space</kbd> Play/Pause
+          </span>
+          <span>
+            <kbd>←</kbd> Back
+          </span>
+          <span>
+            <kbd>→</kbd> Forward
+          </span>
+          <span>
+            <kbd>Esc</kbd> Reset
+          </span>
         </div>
       </footer>
     </div>
