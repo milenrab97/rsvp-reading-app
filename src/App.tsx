@@ -5,6 +5,7 @@ import { WordDisplay } from "./components/WordDisplay";
 import { PlaybackControls } from "./components/PlaybackControls";
 import { SpeedControl } from "./components/SpeedControl";
 import { TextInput } from "./components/TextInput";
+import { PDFUploader } from "./components/PDFUploader";
 import { ProgressBar } from "./components/ProgressBar";
 import { Settings } from "./components/Settings";
 import type { ReadingSettings } from "./types";
@@ -15,7 +16,7 @@ function App() {
 
   const [readingSettings, setReadingSettings] = useState<ReadingSettings>({
     fontFamily: "monospace",
-    fontSize: 40,
+    fontSize: 36,
     orpColor: "#3b82f6",
     backgroundColor: "#ffffff",
     textColor: "#1f2937",
@@ -100,6 +101,12 @@ function App() {
           <SpeedControl
             wpm={rsvpEngine.timingConfig.wpm}
             onWPMChange={rsvpEngine.setWPM}
+            darkMode={readingSettings.darkMode}
+          />
+
+          <PDFUploader
+            onTextExtracted={handleTextSubmit}
+            disabled={rsvpEngine.playbackState === "playing"}
             darkMode={readingSettings.darkMode}
           />
 
