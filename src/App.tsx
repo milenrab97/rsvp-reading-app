@@ -15,11 +15,11 @@ function App() {
   
   const [readingSettings, setReadingSettings] = useState<ReadingSettings>({
     fontFamily: 'monospace',
-    fontSize: 48,
+    fontSize: 40,
     orpColor: '#3b82f6',
     backgroundColor: '#ffffff',
     textColor: '#1f2937',
-    darkMode: false,
+    darkMode: true,
     centerAlignment: true,
     dyslexiaFont: false,
   });
