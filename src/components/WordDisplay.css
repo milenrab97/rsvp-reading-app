@@ -1,0 +1,50 @@
+.word-display-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 2rem;
+  position: relative;
+}
+
+.word-display {
+  font-family: monospace;
+  font-size: 48px;
+  letter-spacing: 0.05em;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.word-display-placeholder {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.before-orp,
+.after-orp {
+  display: inline;
+}
+
+.orp-char {
+  display: inline;
+  font-weight: bold;
+  position: relative;
+}
+
+/* Center alignment guide (optional visual aid) */
+.word-display-container::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05);
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Dark mode for center line */
+.word-display-container.dark-mode::before {
+  background: rgba(255, 255, 255, 0.1);
+}
