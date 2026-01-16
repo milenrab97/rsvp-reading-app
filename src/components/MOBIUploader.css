@@ -1,0 +1,521 @@
+.mobi-uploader-container {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.mobi-uploader-container.dark-mode {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.mobi-uploader-container.collapsed {
+  padding: 12px 20px;
+}
+
+.mobi-uploader-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mobi-uploader-container.collapsed .mobi-uploader-header {
+  margin-bottom: 0;
+}
+
+.mobi-uploader-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.mobi-uploader-container.dark-mode .mobi-uploader-header h3 {
+  color: #f9fafb;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+
+.action-btn:hover {
+  color: #3b82f6;
+}
+
+.mobi-uploader-container.dark-mode .action-btn {
+  color: #9ca3af;
+}
+
+.mobi-uploader-container.dark-mode .action-btn:hover {
+  color: #3b82f6;
+}
+
+.mobi-upload-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mobi-file-input {
+  display: none;
+}
+
+.mobi-upload-label {
+  flex: 1;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.mobi-upload-label:hover {
+  background: #f3f4f6;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.mobi-uploader-container.dark-mode .mobi-upload-label {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+.mobi-uploader-container.dark-mode .mobi-upload-label:hover {
+  background: #111827;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.clear-file-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.clear-file-btn:hover {
+  background: #dc2626;
+}
+
+.clear-file-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.mobi-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  gap: 15px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.mobi-uploader-container.dark-mode .loading-spinner {
+  border-color: #4b5563;
+  border-top-color: #3b82f6;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mobi-loading p {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.mobi-uploader-container.dark-mode .mobi-loading p {
+  color: #9ca3af;
+}
+
+.mobi-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.mobi-uploader-container.dark-mode .mobi-error {
+  background: #7f1d1d;
+  border-color: #991b1b;
+}
+
+.error-icon {
+  font-size: 20px;
+}
+
+.mobi-error p {
+  margin: 0;
+  color: #991b1b;
+  font-size: 14px;
+}
+
+.mobi-uploader-container.dark-mode .mobi-error p {
+  color: #fecaca;
+}
+
+.mobi-preview {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 15px;
+}
+
+.mobi-uploader-container.dark-mode .mobi-preview {
+  border-top-color: #4b5563;
+}
+
+.mobi-metadata {
+  margin-bottom: 20px;
+}
+
+.mobi-metadata h4 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.mobi-uploader-container.dark-mode .mobi-metadata h4 {
+  color: #f9fafb;
+}
+
+.metadata-author {
+  margin: 4px 0;
+  color: #6b7280;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.mobi-uploader-container.dark-mode .metadata-author {
+  color: #9ca3af;
+}
+
+.metadata-info {
+  margin: 4px 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.mobi-uploader-container.dark-mode .metadata-info {
+  color: #9ca3af;
+}
+
+.mobi-chapters-info {
+  margin-bottom: 20px;
+}
+
+.mobi-chapters-info h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobi-uploader-container.dark-mode .mobi-chapters-info h5 {
+  color: #f9fafb;
+}
+
+.chapters-count {
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.mobi-uploader-container.dark-mode .chapters-count {
+  color: #9ca3af;
+}
+
+.chapters-preview-list {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mobi-uploader-container.dark-mode .chapters-preview-list {
+  background: #1f2937;
+}
+
+.chapter-preview-item {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.chapter-preview-item:hover {
+  background: #e5e7eb;
+}
+
+.chapter-preview-item.selected {
+  background: #dbeafe;
+  border-left: 3px solid #3b82f6;
+  padding-left: 5px;
+}
+
+.mobi-uploader-container.dark-mode .chapter-preview-item {
+  color: #d1d5db;
+}
+
+.mobi-uploader-container.dark-mode .chapter-preview-item:hover {
+  background: #374151;
+}
+
+.mobi-uploader-container.dark-mode .chapter-preview-item.selected {
+  background: #1e3a8a;
+  border-left-color: #3b82f6;
+}
+
+.chapter-number {
+  color: #6b7280;
+  font-weight: 600;
+  min-width: 25px;
+}
+
+.mobi-uploader-container.dark-mode .chapter-number {
+  color: #9ca3af;
+}
+
+.chapter-title {
+  flex: 1;
+}
+
+.more-chapters {
+  margin: 8px 0 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+}
+
+.mobi-uploader-container.dark-mode .more-chapters {
+  border-top-color: #374151;
+  color: #9ca3af;
+}
+
+.mobi-content-preview {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+}
+
+.mobi-uploader-container.dark-mode .mobi-content-preview {
+  background: #1f2937;
+  border-left-color: #10b981;
+}
+
+.mobi-content-preview h5 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobi-uploader-container.dark-mode .mobi-content-preview h5 {
+  color: #f9fafb;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.chapter-select {
+  padding: 6px 10px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #374151;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+.chapter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.mobi-uploader-container.dark-mode .chapter-select {
+  background: #111827;
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+.mobi-uploader-container.dark-mode .chapter-select option {
+  background: #111827;
+  color: #d1d5db;
+}
+
+.content-preview-text {
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #374151;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.mobi-uploader-container.dark-mode .content-preview-text {
+  background: #111827;
+  color: #d1d5db;
+}
+
+.preview-note {
+  margin: 8px 0 0 0;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.mobi-uploader-container.dark-mode .preview-note {
+  color: #9ca3af;
+}
+
+.load-chapter-btn {
+  width: 100%;
+  padding: 10px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 12px;
+}
+
+.load-chapter-btn:hover {
+  background: #059669;
+}
+
+.load-chapter-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.content-preview-text::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-preview-text::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+
+.mobi-uploader-container.dark-mode .content-preview-text::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.content-preview-text::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 3px;
+}
+
+.content-preview-text::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+.load-book-btn {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.load-book-btn:hover {
+  background: #2563eb;
+}
+
+.load-book-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Scrollbar styling for chapters preview */
+.chapters-preview-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chapters-preview-list::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+
+.mobi-uploader-container.dark-mode .chapters-preview-list::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.chapters-preview-list::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 3px;
+}
+
+.chapters-preview-list::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

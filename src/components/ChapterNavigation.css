@@ -1,0 +1,154 @@
+.chapter-navigation {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.chapter-navigation.dark-mode {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.chapter-nav-header {
+  margin-bottom: 12px;
+}
+
+.chapter-nav-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.chapter-navigation.dark-mode .chapter-nav-header h4 {
+  color: #f9fafb;
+}
+
+.chapter-selector {
+  margin-bottom: 12px;
+}
+
+.chapter-dropdown {
+  width: 100%;
+  padding: 10px 12px;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chapter-dropdown:hover:not(:disabled) {
+  border-color: #3b82f6;
+}
+
+.chapter-dropdown:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.chapter-dropdown:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chapter-navigation.dark-mode .chapter-dropdown {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.chapter-navigation.dark-mode .chapter-dropdown option {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.chapter-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.chapter-nav-btn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.chapter-nav-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.chapter-nav-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.chapter-position {
+  padding: 6px 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.chapter-navigation.dark-mode .chapter-position {
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+.current-chapter-info {
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.chapter-navigation.dark-mode .current-chapter-info {
+  background: #1f2937;
+}
+
+.chapter-title-display {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.chapter-navigation.dark-mode .chapter-title-display {
+  color: #d1d5db;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .chapter-controls {
+    flex-direction: column;
+  }
+
+  .chapter-nav-btn {
+    width: 100%;
+  }
+
+  .chapter-position {
+    width: 100%;
+    text-align: center;
+  }
+}

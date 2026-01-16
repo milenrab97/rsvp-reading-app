@@ -6,9 +6,11 @@ import { PlaybackControls } from "./components/PlaybackControls";
 import { SpeedControl } from "./components/SpeedControl";
 import { TextInput } from "./components/TextInput";
 import { PDFUploader } from "./components/PDFUploader";
+import { MOBIUploader } from "./components/MOBIUploader";
+import { ChapterNavigation } from "./components/ChapterNavigation";
 import { ProgressBar } from "./components/ProgressBar";
 import { Settings } from "./components/Settings";
-import type { ReadingSettings } from "./types";
+import type { ReadingSettings, MobiChapter, MobiMetadata } from "./types";
 import "./App.css";
 
 function App() {
@@ -24,6 +26,11 @@ function App() {
     centerAlignment: true,
     dyslexiaFont: false,
   });
+
+  // MOBI state
+  const [mobiChapters, setMobiChapters] = useState<MobiChapter[]>([]);
+  const [_mobiMetadata, setMobiMetadata] = useState<MobiMetadata | null>(null);
+  const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -46,6 +53,27 @@ function App() {
 
   const handleReadingSettingsChange = (settings: Partial<ReadingSettings>) => {
     setReadingSettings((prev) => ({ ...prev, ...settings }));
+  };
+
+  // MOBI handlers
+  const handleMobiLoaded = (chapters: MobiChapter[], metadata: MobiMetadata) => {
+    setMobiChapters(chapters);
+    setMobiMetadata(metadata);
+    // Automatically load the first chapter
+    if (chapters.length > 0) {
+      const firstChapter = chapters[0];
+      setCurrentChapterId(firstChapter.id);
+      rsvpEngine.setText(firstChapter.content);
+    }
+  };
+
+  const handleChapterSelect = (chapterId: string) => {
+    const chapter = mobiChapters.find(ch => ch.id === chapterId);
+    if (chapter) {
+      setCurrentChapterId(chapterId);
+      rsvpEngine.setText(chapter.content);
+      rsvpEngine.reset();
+    }
   };
 
   const appStyle = {
@@ -109,6 +137,22 @@ function App() {
             disabled={rsvpEngine.playbackState === "playing"}
             darkMode={readingSettings.darkMode}
           />
+
+          <MOBIUploader
+            onMobiLoaded={handleMobiLoaded}
+            disabled={rsvpEngine.playbackState === "playing"}
+            darkMode={readingSettings.darkMode}
+          />
+
+          {mobiChapters.length > 0 && (
+            <ChapterNavigation
+              chapters={mobiChapters}
+              currentChapterId={currentChapterId}
+              onChapterSelect={handleChapterSelect}
+              disabled={rsvpEngine.playbackState === "playing"}
+              darkMode={readingSettings.darkMode}
+            />
+          )}
 
           <TextInput
             onTextSubmit={handleTextSubmit}

@@ -49,3 +49,26 @@ export interface RSVPState {
   timingConfig: TimingConfig;
   readingSettings: ReadingSettings;
 }
+
+// MOBI-related types
+export interface MobiChapter {
+  id: string;
+  title: string;
+  content: string;
+  position: number;
+}
+
+export interface MobiMetadata {
+  title?: string;
+  author?: string;
+  publisher?: string;
+  language?: string;
+  isbn?: string;
+  description?: string;
+}
+
+export interface MobiState {
+  chapters: MobiChapter[];
+  currentChapterId: string | null;
+  metadata: MobiMetadata | null;
+}
