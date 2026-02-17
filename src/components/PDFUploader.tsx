@@ -10,21 +10,29 @@ interface PDFUploaderProps {
   onTextExtracted: (text: string, bookName: string) => void;
   disabled?: boolean;
   darkMode?: boolean;
+  initialPdfSource?: string;
+  initialPdfUrl?: string;
+  onPdfFileLoaded?: (data: ArrayBuffer, fileName: string) => void;
+  onPdfUrlLoaded?: (url: string) => void;
 }
 
 export const PDFUploader: React.FC<PDFUploaderProps> = ({
   onTextExtracted,
   disabled = false,
   darkMode = false,
+  initialPdfSource,
+  initialPdfUrl,
+  onPdfFileLoaded,
+  onPdfUrlLoaded,
 }) => {
   const [file, setFile] = useState<File | null>(null);
-  const [pdfUrl, setPdfUrl] = useState<string>('');
+  const [pdfUrl, setPdfUrl] = useState<string>(initialPdfUrl ?? '');
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageTexts, setPageTexts] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [scale, setScale] = useState<number>(1.0);
-  const [pdfSource, setPdfSource] = useState<File | string | null>(null);
+  const [pdfSource, setPdfSource] = useState<File | string | null>(initialPdfSource ?? null);
   const [startPage, setStartPage] = useState<number>(1);
   const [endPage, setEndPage] = useState<number>(0);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
@@ -47,7 +55,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
     setPdfUrl(url);
     setSuggestedTitle(title);
     setShowSuggestions(false);
-    
+
     // Auto-load the URL
     try {
       const proxies = [
@@ -59,12 +67,12 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
 
       let success = false;
       let lastError = '';
-      
+
       for (const proxy of proxies) {
         try {
           const loadUrl = proxy ? proxy + encodeURIComponent(url) : url;
           const response = await fetch(loadUrl);
-          
+
           if (response.ok) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
@@ -72,6 +80,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
             setFile(null);
             setCurrentPage(1);
             setPageTexts([]);
+            onPdfUrlLoaded?.(url);
             success = true;
             break;
           } else {
@@ -92,7 +101,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
     }
   };
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile);
@@ -101,6 +110,10 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
       setSuggestedTitle(null);
       setCurrentPage(1);
       setPageTexts([]);
+      if (onPdfFileLoaded) {
+        const buffer = await selectedFile.arrayBuffer();
+        onPdfFileLoaded(buffer, selectedFile.name);
+      }
     }
   };
 
@@ -118,12 +131,12 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
 
       let success = false;
       let lastError = '';
-      
+
       for (const proxy of proxies) {
         try {
           const url = proxy ? proxy + encodeURIComponent(pdfUrl) : pdfUrl;
           const response = await fetch(url);
-          
+
           if (response.ok) {
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
@@ -131,6 +144,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
             setFile(null);
             setCurrentPage(1);
             setPageTexts([]);
+            onPdfUrlLoaded?.(pdfUrl);
             success = true;
             break;
           } else {

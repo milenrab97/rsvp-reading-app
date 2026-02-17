@@ -105,4 +105,7 @@ export interface PersistedState {
   currentChapterId: string | null;
   mobiMetadata: MobiMetadata | null;
   currentBookName: string;
+  pdfUrl?: string;
+  pdfFileName?: string;
+  hasPdfFile?: boolean;
 }

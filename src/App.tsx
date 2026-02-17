@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRSVPEngine } from "./hooks/useRSVPEngine";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { saveState, loadState, saveStats, loadStats, appVersion } from "./utils/storage";
+import { savePdfFile, loadPdfFile, clearPdfFile } from "./utils/fileStorage";
 import { WordDisplay } from "./components/WordDisplay";
 import { PlaybackControls } from "./components/PlaybackControls";
 import { SpeedControl } from "./components/SpeedControl";
@@ -48,10 +49,19 @@ function App() {
     savedState.current?.currentBookName ?? ''
   );
 
+  // PDF restore state
+  const [restoredPdfSource, setRestoredPdfSource] = useState<string | undefined>(undefined);
+  const [restoredPdfUrl, setRestoredPdfUrl] = useState<string | undefined>(undefined);
+
+  // PDF persistence tracking
+  const pdfUrlRef = useRef<string | undefined>(savedState.current?.pdfUrl);
+  const pdfFileNameRef = useRef<string | undefined>(savedState.current?.pdfFileName);
+  const hasPdfFileRef = useRef<boolean>(savedState.current?.hasPdfFile ?? false);
+
   // Live timer
   const [liveTimerSeconds, setLiveTimerSeconds] = useState(0);
 
-  // Restore saved reading position and timing config on mount
+  // Restore saved reading position, timing config, and PDF on mount
   const restoredRef = useRef(false);
   useEffect(() => {
     if (restoredRef.current || !savedState.current) return;
@@ -66,6 +76,43 @@ function App() {
         rsvpEngine.restorePosition(s.rawText, s.currentIndex);
       }, 0);
     }
+
+    // Restore PDF viewer
+    const restorePdf = async () => {
+      if (s.pdfUrl) {
+        // URL-loaded PDF: re-fetch via CORS proxy chain
+        const proxies = [
+          '',
+          'https://corsproxy.io/?',
+          'https://api.codetabs.com/v1/proxy?quest=',
+          'https://thingproxy.freeboard.io/fetch/',
+        ];
+        for (const proxy of proxies) {
+          try {
+            const fetchUrl = proxy ? proxy + encodeURIComponent(s.pdfUrl) : s.pdfUrl;
+            const response = await fetch(fetchUrl);
+            if (response.ok) {
+              const blob = await response.blob();
+              const blobUrl = URL.createObjectURL(blob);
+              setRestoredPdfSource(blobUrl);
+              setRestoredPdfUrl(s.pdfUrl);
+              break;
+            }
+          } catch {
+            continue;
+          }
+        }
+      } else if (s.hasPdfFile) {
+        // File-uploaded PDF: load from IndexedDB
+        const buffer = await loadPdfFile();
+        if (buffer) {
+          const blob = new Blob([buffer], { type: 'application/pdf' });
+          const blobUrl = URL.createObjectURL(blob);
+          setRestoredPdfSource(blobUrl);
+        }
+      }
+    };
+    restorePdf();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Gather current state for saving
@@ -79,6 +126,9 @@ function App() {
     currentChapterId,
     mobiMetadata: _mobiMetadata,
     currentBookName,
+    pdfUrl: pdfUrlRef.current,
+    pdfFileName: pdfFileNameRef.current,
+    hasPdfFile: hasPdfFileRef.current,
   }), [rsvpEngine.rawText, rsvpEngine.currentIndex, readingSettings, rsvpEngine.timingConfig, mobiChapters, currentChapterId, _mobiMetadata, currentBookName]);
 
   // Auto-save on changes (debounced)
@@ -252,12 +302,42 @@ function App() {
     setReadingSettings((prev) => ({ ...prev, ...settings }));
   };
 
+  // PDF persistence callbacks
+  const handlePdfFileLoaded = useCallback((data: ArrayBuffer, fileName: string) => {
+    pdfUrlRef.current = undefined;
+    pdfFileNameRef.current = fileName;
+    hasPdfFileRef.current = true;
+    // Clear MOBI state when loading a PDF
+    setMobiChapters([]);
+    setMobiMetadata(null);
+    setCurrentChapterId(null);
+    savePdfFile(data);
+  }, []);
+
+  const handlePdfUrlLoaded = useCallback((url: string) => {
+    pdfUrlRef.current = url;
+    pdfFileNameRef.current = undefined;
+    hasPdfFileRef.current = false;
+    // Clear MOBI state when loading a PDF
+    setMobiChapters([]);
+    setMobiMetadata(null);
+    setCurrentChapterId(null);
+    clearPdfFile();
+  }, []);
+
   // MOBI handlers
   const handleMobiLoaded = (chapters: MobiChapter[], metadata: MobiMetadata) => {
     setMobiChapters(chapters);
     setMobiMetadata(metadata);
     const name = metadata.title || 'MOBI Book';
     setCurrentBookName(name);
+    // Clear PDF state when loading MOBI
+    pdfUrlRef.current = undefined;
+    pdfFileNameRef.current = undefined;
+    hasPdfFileRef.current = false;
+    setRestoredPdfSource(undefined);
+    setRestoredPdfUrl(undefined);
+    clearPdfFile();
     // Automatically load the first chapter
     if (chapters.length > 0) {
       const firstChapter = chapters[0];
@@ -341,12 +421,21 @@ function App() {
             onTextExtracted={handleTextSubmit}
             disabled={rsvpEngine.playbackState === "playing"}
             darkMode={readingSettings.darkMode}
+            initialPdfSource={restoredPdfSource}
+            initialPdfUrl={restoredPdfUrl}
+            onPdfFileLoaded={handlePdfFileLoaded}
+            onPdfUrlLoaded={handlePdfUrlLoaded}
           />
 
           <MOBIUploader
             onMobiLoaded={handleMobiLoaded}
             disabled={rsvpEngine.playbackState === "playing"}
             darkMode={readingSettings.darkMode}
+            initialPreview={
+              mobiChapters.length > 0 && _mobiMetadata
+                ? { chapters: mobiChapters, metadata: _mobiMetadata }
+                : null
+            }
           />
 
           {mobiChapters.length > 0 && (

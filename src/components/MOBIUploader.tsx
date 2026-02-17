@@ -7,12 +7,14 @@ interface MOBIUploaderProps {
   onMobiLoaded: (chapters: MobiChapter[], metadata: MobiMetadata) => void;
   disabled?: boolean;
   darkMode?: boolean;
+  initialPreview?: { chapters: MobiChapter[]; metadata: MobiMetadata } | null;
 }
 
 export const MOBIUploader: React.FC<MOBIUploaderProps> = ({
   onMobiLoaded,
   disabled = false,
   darkMode = false,
+  initialPreview = null,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +23,7 @@ export const MOBIUploader: React.FC<MOBIUploaderProps> = ({
   const [preview, setPreview] = useState<{
     chapters: MobiChapter[];
     metadata: MobiMetadata;
-  } | null>(null);
+  } | null>(initialPreview);
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number>(0);
 
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
