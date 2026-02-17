@@ -88,17 +88,28 @@ function App() {
     return () => clearTimeout(timer);
   }, [getCurrentState, rsvpEngine.rawText]);
 
-  // Save on beforeunload — also defined further below after commitSession is created
+  // Save on page unload / hide — commitSessionRef is wired up further below
   const commitSessionRef = useRef<() => void>(() => {});
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const flushAndSave = () => {
       commitSessionRef.current();
       if (rsvpEngine.rawText) {
         saveState(getCurrentState());
       }
     };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    // pagehide is reliable on mobile Safari; visibilitychange covers backgrounding
+    const handlePageHide = () => flushAndSave();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') flushAndSave();
+    };
+    window.addEventListener('beforeunload', flushAndSave);
+    window.addEventListener('pagehide', handlePageHide);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('beforeunload', flushAndSave);
+      window.removeEventListener('pagehide', handlePageHide);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [getCurrentState, rsvpEngine.rawText]);
 
   // Reading stats tracking
