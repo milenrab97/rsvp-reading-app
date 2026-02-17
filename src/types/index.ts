@@ -73,6 +73,28 @@ export interface MobiState {
   metadata: MobiMetadata | null;
 }
 
+export interface SessionEntry {
+  bookName: string;
+  wordsRead: number;
+  readingTimeMs: number;
+  timestamp: number; // Date.now() when session ended
+}
+
+export interface BookStats {
+  bookName: string;
+  totalWordsRead: number;
+  totalReadingTimeMs: number;
+  sessionsCount: number;
+}
+
+export interface ReadingStats {
+  totalWordsRead: number;
+  totalReadingTimeMs: number;
+  sessionsCount: number;
+  books: Record<string, BookStats>;
+  sessions: SessionEntry[]; // last 50, newest first
+}
+
 export interface PersistedState {
   appVersion: string;
   rawText: string;
@@ -82,4 +104,5 @@ export interface PersistedState {
   mobiChapters: MobiChapter[];
   currentChapterId: string | null;
   mobiMetadata: MobiMetadata | null;
+  currentBookName: string;
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './TextInput.css';
 
 interface TextInputProps {
-  onTextSubmit: (text: string) => void;
+  onTextSubmit: (text: string, bookName: string) => void;
   disabled?: boolean;
   darkMode?: boolean;
 }
@@ -17,7 +17,9 @@ export const TextInput: React.FC<TextInputProps> = ({
 
   const handleSubmit = () => {
     if (text.trim()) {
-      onTextSubmit(text);
+      const words = text.trim().split(/\s+/).slice(0, 5).join(' ');
+      const bookName = words + (text.trim().split(/\s+/).length > 5 ? '...' : '');
+      onTextSubmit(text, bookName);
     }
   };
 

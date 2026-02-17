@@ -1,0 +1,204 @@
+.stats-container {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  transition: all 0.3s;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.stats-header:hover {
+  background: #f9fafb;
+}
+
+.stats-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.stats-content {
+  padding: 0 1rem 1rem 1rem;
+}
+
+/* Tabs */
+.stats-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stats-tab {
+  flex: 1;
+  padding: 0.5rem 0.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.stats-tab:hover {
+  color: #374151;
+}
+
+.stats-tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 0.75rem 0.5rem;
+  background: #f9fafb;
+  border-radius: 0.375rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+
+/* Book subtitle */
+.book-subtitle {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Empty state */
+.stats-empty {
+  text-align: center;
+  padding: 1.5rem 0;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+/* Session list (History tab) */
+.session-list {
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.session-item {
+  padding: 0.5rem 0.625rem;
+  background: #f9fafb;
+  border-radius: 0.375rem;
+}
+
+.session-book {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-details {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.session-time {
+  margin-left: auto;
+}
+
+/* Dark mode */
+.stats-container.dark-mode {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.stats-container.dark-mode .stats-header:hover {
+  background: #4b5563;
+}
+
+.stats-container.dark-mode .stats-header h3 {
+  color: #f9fafb;
+}
+
+.stats-container.dark-mode .stats-tabs {
+  border-bottom-color: #4b5563;
+}
+
+.stats-container.dark-mode .stats-tab {
+  color: #9ca3af;
+}
+
+.stats-container.dark-mode .stats-tab:hover {
+  color: #d1d5db;
+}
+
+.stats-container.dark-mode .stats-tab.active {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
+}
+
+.stats-container.dark-mode .stat-card {
+  background: #1f2937;
+}
+
+.stats-container.dark-mode .stat-value {
+  color: #f9fafb;
+}
+
+.stats-container.dark-mode .stat-label {
+  color: #9ca3af;
+}
+
+.stats-container.dark-mode .toggle-btn {
+  color: #d1d5db;
+}
+
+.stats-container.dark-mode .book-subtitle {
+  color: #9ca3af;
+}
+
+.stats-container.dark-mode .session-item {
+  background: #1f2937;
+}
+
+.stats-container.dark-mode .session-book {
+  color: #f9fafb;
+}
+
+.stats-container.dark-mode .session-details {
+  color: #9ca3af;
+}

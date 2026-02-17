@@ -7,7 +7,7 @@ import './PDFUploader.css';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PDFUploaderProps {
-  onTextExtracted: (text: string) => void;
+  onTextExtracted: (text: string, bookName: string) => void;
   disabled?: boolean;
   darkMode?: boolean;
 }
@@ -28,6 +28,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
   const [startPage, setStartPage] = useState<number>(1);
   const [endPage, setEndPage] = useState<number>(0);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const [suggestedTitle, setSuggestedTitle] = useState<string | null>(null);
 
   const suggestedBooks = [
     {
@@ -42,8 +43,9 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
     }
   ];
 
-  const loadSuggestedBook = async (url: string) => {
+  const loadSuggestedBook = async (url: string, title: string) => {
     setPdfUrl(url);
+    setSuggestedTitle(title);
     setShowSuggestions(false);
     
     // Auto-load the URL
@@ -96,6 +98,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
       setFile(selectedFile);
       setPdfSource(selectedFile);
       setPdfUrl('');
+      setSuggestedTitle(null);
       setCurrentPage(1);
       setPageTexts([]);
     }
@@ -208,7 +211,8 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
         .map((item: any) => item.str)
         .join(' ');
       
-      onTextExtracted(text);
+      const name = file ? file.name.replace(/\.pdf$/i, '') : suggestedTitle || decodeURIComponent(pdfUrl.split('/').pop() || '').replace(/\.pdf$/i, '') || 'PDF Document';
+      onTextExtracted(text, name);
     } catch (error) {
       console.error('Error extracting text from current page:', error);
     }
@@ -240,7 +244,8 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
       }
 
       setPageTexts(allTexts);
-      onTextExtracted(allTexts.join('\n\n'));
+      const name = file ? file.name.replace(/\.pdf$/i, '') : suggestedTitle || decodeURIComponent(pdfUrl.split('/').pop() || '').replace(/\.pdf$/i, '') || 'PDF Document';
+      onTextExtracted(allTexts.join('\n\n'), name);
     } catch (error) {
       console.error('Error extracting all text from PDF:', error);
     }
@@ -313,7 +318,7 @@ export const PDFUploader: React.FC<PDFUploaderProps> = ({
                     </div>
                     <button
                       className="suggestion-load-btn"
-                      onClick={() => loadSuggestedBook(book.url)}
+                      onClick={() => loadSuggestedBook(book.url, book.title)}
                       disabled={disabled}
                     >
                       Load
