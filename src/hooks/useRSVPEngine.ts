@@ -10,6 +10,7 @@ interface UseRSVPEngineReturn {
   progress: number; // 0-100
   elapsedTime: number; // in milliseconds
   totalTime: number; // in milliseconds
+  rawText: string;
   play: () => void;
   pause: () => void;
   reset: () => void;
@@ -18,6 +19,7 @@ interface UseRSVPEngineReturn {
   jumpForward: (words?: number) => void;
   jumpBackward: (words?: number) => void;
   seekToIndex: (index: number) => void;
+  restorePosition: (text: string, index: number) => void;
   timingConfig: TimingConfig;
   updateTimingConfig: (config: Partial<TimingConfig>) => void;
 }
@@ -27,6 +29,7 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
   const [tokens, setTokens] = useState<Token[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timingConfig, setTimingConfig] = useState<TimingConfig>(DEFAULT_TIMING_CONFIG);
+  const [rawText, setRawText] = useState('');
   
   // Refs for precise timing control
   const animationFrameRef = useRef<number | undefined>(undefined);
@@ -142,6 +145,7 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
    * Set new text and tokenize
    */
   const setText = useCallback((text: string) => {
+    setRawText(text);
     const newTokens = tokenizeText(text, timingConfig);
     setTokens(newTokens);
     setCurrentIndex(0);
@@ -214,6 +218,22 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
     }
   }, [tokens.length, playbackState]);
 
+  /**
+   * Restore text and position in one call (used when loading saved state)
+   */
+  const restorePosition = useCallback((text: string, index: number) => {
+    setRawText(text);
+    const newTokens = tokenizeText(text, timingConfig);
+    setTokens(newTokens);
+    const clampedIndex = Math.max(0, Math.min(index, newTokens.length - 1));
+    setCurrentIndex(clampedIndex);
+    setPlaybackState(newTokens.length > 0 ? 'paused' : 'idle');
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    startTimeRef.current = undefined;
+  }, [timingConfig]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -231,6 +251,7 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
     progress,
     elapsedTime,
     totalTime,
+    rawText,
     play,
     pause,
     reset,
@@ -239,6 +260,7 @@ export function useRSVPEngine(): UseRSVPEngineReturn {
     jumpForward,
     jumpBackward,
     seekToIndex,
+    restorePosition,
     timingConfig,
     updateTimingConfig,
   };

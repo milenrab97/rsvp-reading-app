@@ -67,6 +67,13 @@
   color: #6b7280;
 }
 
+.app-version {
+  text-align: center;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
 .keyboard-hints kbd {
   background: white;
   border: 1px solid #d1d5db;

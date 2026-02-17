@@ -72,3 +72,14 @@ export interface MobiState {
   currentChapterId: string | null;
   metadata: MobiMetadata | null;
 }
+
+export interface PersistedState {
+  appVersion: string;
+  rawText: string;
+  currentIndex: number;
+  readingSettings: ReadingSettings;
+  timingConfig: TimingConfig;
+  mobiChapters: MobiChapter[];
+  currentChapterId: string | null;
+  mobiMetadata: MobiMetadata | null;
+}

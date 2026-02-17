@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRSVPEngine } from "./hooks/useRSVPEngine";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import { saveState, loadState, appVersion } from "./utils/storage";
 import { WordDisplay } from "./components/WordDisplay";
 import { PlaybackControls } from "./components/PlaybackControls";
 import { SpeedControl } from "./components/SpeedControl";
@@ -13,24 +14,82 @@ import { Settings } from "./components/Settings";
 import type { ReadingSettings, MobiChapter, MobiMetadata } from "./types";
 import "./App.css";
 
+const DEFAULT_READING_SETTINGS: ReadingSettings = {
+  fontFamily: "monospace",
+  fontSize: 36,
+  orpColor: "#3b82f6",
+  backgroundColor: "#ffffff",
+  textColor: "#1f2937",
+  darkMode: true,
+  centerAlignment: true,
+  dyslexiaFont: false,
+};
+
 function App() {
+  const savedState = useRef(loadState());
   const rsvpEngine = useRSVPEngine();
 
-  const [readingSettings, setReadingSettings] = useState<ReadingSettings>({
-    fontFamily: "monospace",
-    fontSize: 36,
-    orpColor: "#3b82f6",
-    backgroundColor: "#ffffff",
-    textColor: "#1f2937",
-    darkMode: true,
-    centerAlignment: true,
-    dyslexiaFont: false,
-  });
+  const [readingSettings, setReadingSettings] = useState<ReadingSettings>(
+    savedState.current?.readingSettings ?? DEFAULT_READING_SETTINGS
+  );
 
   // MOBI state
-  const [mobiChapters, setMobiChapters] = useState<MobiChapter[]>([]);
-  const [_mobiMetadata, setMobiMetadata] = useState<MobiMetadata | null>(null);
-  const [currentChapterId, setCurrentChapterId] = useState<string | null>(null);
+  const [mobiChapters, setMobiChapters] = useState<MobiChapter[]>(
+    savedState.current?.mobiChapters ?? []
+  );
+  const [_mobiMetadata, setMobiMetadata] = useState<MobiMetadata | null>(
+    savedState.current?.mobiMetadata ?? null
+  );
+  const [currentChapterId, setCurrentChapterId] = useState<string | null>(
+    savedState.current?.currentChapterId ?? null
+  );
+
+  // Restore saved reading position and timing config on mount
+  const restoredRef = useRef(false);
+  useEffect(() => {
+    if (restoredRef.current || !savedState.current) return;
+    restoredRef.current = true;
+    const s = savedState.current;
+    if (s.timingConfig) {
+      rsvpEngine.updateTimingConfig(s.timingConfig);
+    }
+    if (s.rawText) {
+      // Use setTimeout to ensure timingConfig has been applied
+      setTimeout(() => {
+        rsvpEngine.restorePosition(s.rawText, s.currentIndex);
+      }, 0);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Gather current state for saving
+  const getCurrentState = useCallback(() => ({
+    appVersion,
+    rawText: rsvpEngine.rawText,
+    currentIndex: rsvpEngine.currentIndex,
+    readingSettings,
+    timingConfig: rsvpEngine.timingConfig,
+    mobiChapters,
+    currentChapterId,
+    mobiMetadata: _mobiMetadata,
+  }), [rsvpEngine.rawText, rsvpEngine.currentIndex, readingSettings, rsvpEngine.timingConfig, mobiChapters, currentChapterId, _mobiMetadata]);
+
+  // Auto-save on changes (debounced)
+  useEffect(() => {
+    if (!rsvpEngine.rawText) return;
+    const timer = setTimeout(() => saveState(getCurrentState()), 1000);
+    return () => clearTimeout(timer);
+  }, [getCurrentState, rsvpEngine.rawText]);
+
+  // Save on beforeunload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (rsvpEngine.rawText) {
+        saveState(getCurrentState());
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [getCurrentState, rsvpEngine.rawText]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -184,6 +243,7 @@ function App() {
             <kbd>Esc</kbd> Reset
           </span>
         </div>
+        <div className="app-version">v{appVersion}</div>
       </footer>
     </div>
   );
